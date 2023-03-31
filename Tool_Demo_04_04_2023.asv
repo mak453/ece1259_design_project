@@ -11,9 +11,7 @@ polystryrene = dielectric('polystryrene', 2.56, 20e6, 1e-17);
 quartz = dielectric('quartz', 3.8, 30e6, 1e-17);
 teflon = dielectric('teflon', 2.1, 60e6, 1e-15);
 
-material_bank = [air, alumina, barium_titanate, glass, mica, polyethylene, polystryrene, quartz, teflon];
-
-
+material_bank = [air, alumina, barium_titanate, glass, mica, polyethylene, polystryrene, quartz, teflon].name
 
 
 one = capacitor(air);
