@@ -42,11 +42,11 @@ dist_label.Text = 'Distance between Plates (m)';
 dist_label.Layout.Row = 3;
 dist_label.Layout.Column = 1;
 
-b =  uibutton(fig, "Text","Calculate", "ButtonPushedFcn", @(src,event) create_capacitor());
+b =  uibutton(fig, "Text","Calculate", "ButtonPushedFcn", @(src,event) create_capacitor(dd, cap, area, dist));
 b.Layout.Row = 5;
 b.Layout.Column = 3;
 
-function create_capacitor(bank, cap_val, area_val, dist_val) 
-    cap_obj = capacitor(bank(1), cap_val, area_val, dist_val);
+function create_capacitor(dd, cap, area, dist) 
+    cap_obj = capacitor(dd.ItemsData, cap.Value, area.Value, dist.Value);
 end
 
