@@ -11,8 +11,6 @@ classdef dielectric
     
     methods
         function obj = dielectric(a,b,c,d)
-            %UNTITLED5 Construct an instance of this class
-            %   Detailed explanation goes here
             obj.name = a;
             obj.er = b;
             obj.Ebr = c;

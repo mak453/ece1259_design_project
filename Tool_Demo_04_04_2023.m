@@ -1,21 +1,52 @@
 clear; clc;
 addpath('Class_Definitions')
+run("material_bank.m")
 
-air = dielectric('air', 1.005, 3e6, 0);
-alumina = dielectric('alumina', 9.9, -1, -1);
-barium_titanate = dielectric('barium titanate', 7.5e6, -1, -1);
-glass = dielectric('glass', 10,  30e6, 1e-12);
-mica = dielectric('mica', 5.4, 200e6, 1e-15);
-polyethylene = dielectric('polyethylene', 2.26, 47e6, 1e-15);
-polystryrene = dielectric('polystryrene', 2.56, 20e6, 1e-17);
-quartz = dielectric('quartz', 3.8, 30e6, 1e-17);
-teflon = dielectric('teflon', 2.1, 60e6, 1e-15);
+fig = uigridlayout([5,3]);
+dd = uidropdown(fig, "Items", bank_names, "ItemsData",material_values);
+dd.Layout.Row = 4;
+dd.Layout.Column = 2;
 
-material_bank = [air, alumina, barium_titanate, glass, mica, polyethylene, polystryrene, quartz, teflon];
+dd_label = uilabel(fig);
+dd_label.Text = "Dielectric Material";
+dd_label.Layout.Row = 4;
+dd_label.Layout.Column = 1;
 
+cap = uieditfield(fig,'numeric');
+cap.Value = 0;
+cap.Layout.Row = 1;
+cap.Layout.Column = 2;
 
+cap_label = uilabel(fig);
+cap_label.Text = "Capacitance Value (F)";
+cap_label.Layout.Row = 1;
+cap_label.Layout.Column = 1;
 
+area = uieditfield(fig,'numeric');
+area.Value = 0;
+area.Layout.Row = 2;
+area.Layout.Column = 2;
 
-one = capacitor(air);
+area_label = uilabel(fig);
+area_label.Text = 'Surface Area (m^2)';
+area_label.Layout.Row = 2;
+area_label.Layout.Column = 1;
 
-one.solve_1()
+dist = uieditfield(fig,'numeric');
+dist.Value = 0;
+dist.Layout.Row = 3;
+dist.Layout.Column = 2;
+
+dist_label = uilabel(fig);
+dist_label.Text = 'Distance between Plates (m)';
+dist_label.Layout.Row = 3;
+dist_label.Layout.Column = 1;
+
+b =  uibutton(fig, "Text","Calculate", "ButtonPushedFcn", @(src,event) create_capacitor());
+b.Layout.Row = 5;
+b.Layout.Column = 3;
+
+function create_capacitor(bank, cap_val, area_val, dist_val) 
+    cap_obj = capacitor(bank(1), cap_val, area_val, dist_val);
+end
+

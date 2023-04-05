@@ -1,40 +1,53 @@
 classdef capacitor
-    %UNTITLED8 Summary of this class goes here
-    %   Detailed explanation goes here
     properties (Constant, Access = private)
       e0 = 8.854e-12
       valid = false
     end
     
+    properties (Access = private)
+        dielectric
+    end
+    
     properties
-        area = -1
-        capacitance = -1
-        max_voltage = -1
-        max_charge = -1
-        plate_distance = -1
-        dielectric = -1        
+        area
+        capacitance
+        max_voltage
+        max_charge
+        plate_distance
+        material
+        reactance
     end
     
     methods
-        function obj = capacitor(material)
-            %UNTITLED8 Construct an instance of this class
-            %   Detailed explanation goes here
+        function obj = capacitor(material, cap, area, dist)          
             arguments 
                 material dielectric
+                cap=0
+                area=0
+                dist=0
             end
                 
             obj.dielectric = material;
+            obj.material = material.name;
+            obj.capacitance = cap;
+            obj.area = area;
+            obj.plate_distance = dist;
+            
+            obj.solve(obj)
         end
-        
-        function outputArg = solve_1(obj, prop_1, prop_2, prop_3)
-            % C = (e0*er)*A/d
-            % 1       2   3 4
-            
-            
-            
-            switch inputArg
-                case 1 
-                    outputArg = (obj.e0*obj.dielectric.er*obj.A)/obj.d;                   
+    end  
+    
+    methods(Static)
+        function obj = solve(obj) 
+            % C = (e0*er*A)/d            
+            if obj.capacitance == 0 && obj.area > 0 && obj.plate_distance > 0
+                obj.capacitance = (obj.dielectric.er * obj.area)/obj.plate_distance; 
+            elseif obj.capacitance > 0 && obj.area == 0 && obj.plate_distance > 0
+                obj.area = (obj.capacitance*obj.plate_distance)/(e0*obj.dielectric.er);
+            elseif obj.capacitance > 0 && obj.area > 0 && obj.plate_distance == 0
+                obj.plate_distance = (e0*obj.dielectric.er*obj.area)/obj.capacitance;
+            else
+                % error
             end
         end
     end
