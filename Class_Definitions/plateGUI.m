@@ -40,7 +40,7 @@ function plateGUI(fig, bank_names, bank)
     A_field.Layout.Column = 2;
 
     b =  uibutton(fig, "Text","Calculate");   
-    set(b, "ButtonPushedFcn", @(src,event)create_capacitor(dd, cap, area, dist));
+    set(b, "ButtonPushedFcn", @(src,event)create_capacitor(dd, cap, area, A_field));
     b.Layout.Row = 6;
     
     function create_capacitor(dd, cap, area, dist)
