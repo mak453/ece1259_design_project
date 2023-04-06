@@ -1,4 +1,4 @@
-classdef capacitor
+classdef capacitor < handle
     properties (Constant, Access = private)
       e0 = 8.854e-12
       valid = false
@@ -33,21 +33,20 @@ classdef capacitor
             obj.area = area;
             obj.plate_distance = dist;
             
-            obj.solve(obj)
+            obj.solve();
         end
-    end  
-    
-    methods(Static)
+
         function obj = solve(obj) 
             % C = (e0*er*A)/d            
             if obj.capacitance == 0 && obj.area > 0 && obj.plate_distance > 0
-                obj.capacitance = (obj.dielectric.er * obj.area)/obj.plate_distance; 
+                obj.capacitance = (obj.dielectric.er*obj.e0* obj.area)/obj.plate_distance; 
             elseif obj.capacitance > 0 && obj.area == 0 && obj.plate_distance > 0
-                obj.area = (obj.capacitance*obj.plate_distance)/(e0*obj.dielectric.er);
+                obj.area = (obj.capacitance*obj.plate_distance)/(obj.e0*obj.dielectric.er);
             elseif obj.capacitance > 0 && obj.area > 0 && obj.plate_distance == 0
-                obj.plate_distance = (e0*obj.dielectric.er*obj.area)/obj.capacitance;
+                obj.plate_distance = (obj.e0*obj.dielectric.er*obj.area)/obj.capacitance;
             else
-                % error
+                ME = MException('GUI:InvalidInputs','Too many missing inputs. Cannot solve.');
+                throw(ME)
             end
         end
     end
