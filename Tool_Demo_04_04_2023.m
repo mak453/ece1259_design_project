@@ -1,56 +1,10 @@
 all_fig = findall(0, 'type', 'figure');
-close(all_fig);clear; clc;
+close(all_fig); clear; clc;
 addpath('Class_Definitions')
-run("material_bank.m")
+[bank_names, bank] = material_bank;
 
-fig = uigridlayout([5,3]);
-dd = uidropdown(fig, "Items", bank_names, "ItemsData",material_values);
-dd.Layout.Row = 4;
-dd.Layout.Column = 2;
+GUI(bank_names, bank)
 
-<<<<<<< Updated upstream
-dd_label = uilabel(fig);
-dd_label.Text = "Dielectric Material";
-dd_label.Layout.Row = 4;
-dd_label.Layout.Column = 1;
-
-cap = uieditfield(fig,'numeric');
-cap.Value = 0;
-cap.Layout.Row = 1;
-cap.Layout.Column = 2;
-
-cap_label = uilabel(fig);
-cap_label.Text = "Capacitance Value (F)";
-cap_label.Layout.Row = 1;
-cap_label.Layout.Column = 1;
-
-area = uieditfield(fig,'numeric');
-area.Value = 0;
-area.Layout.Row = 2;
-area.Layout.Column = 2;
-
-area_label = uilabel(fig);
-area_label.Text = 'Surface Area (m^2)';
-area_label.Layout.Row = 2;
-area_label.Layout.Column = 1;
-
-dist = uieditfield(fig,'numeric');
-dist.Value = 0;
-dist.Layout.Row = 3;
-dist.Layout.Column = 2;
-
-dist_label = uilabel(fig);
-dist_label.Text = 'Distance between Plates (m)';
-dist_label.Layout.Row = 3;
-dist_label.Layout.Column = 1;
-
-b =  uibutton(fig, "Text","Calculate", "ButtonPushedFcn", @(src,event) create_capacitor());
-b.Layout.Row = 5;
-b.Layout.Column = 3;
-
-function create_capacitor(bank, cap_val, area_val, dist_val) 
-    cap_obj = capacitor(bank(1), cap_val, area_val, dist_val);
-=======
 function GUI(bank_names, bank)
     figGUI = uifigure('Name','Capacitor Design Tool','NumberTitle','off','WindowState', 'maximized');
     fig = uigridlayout(figGUI, [7,8]);
@@ -129,27 +83,50 @@ function GUI(bank_names, bank)
     fig.RowHeight{5} = 0;
     A_label.Text = 'Distance (m)';
     
+    data = [dd, cap, area, A_field, B_field];
     shape_SelectionChangedFcn(cap_shape, default);
     set(cap_shape, 'SelectionChangedFcn', @shape_SelectionChangedFcn);
     
+    calc =  uibutton(fig, 'Text', 'Calculate', 'FontSize', 32, 'Visible', 'off'); 
+    calc.Layout.Row = 7;
+    calc.Layout.Column = [1 3];   
+      
+    bode =  uibutton(fig, 'Text', 'Plot Bode', 'FontSize', 32, 'Visible', 'off'); 
+    set(bode, 'ButtonPushedFcn', @bode_cap);
+    bode.Layout.Row = 7;
+    bode.Layout.Column = [5 8];
+    
     function shape_SelectionChangedFcn(hObject, button) 
-        
         switch get(button.NewValue, 'Text')
             case 'Spherical'
+                calc.Visible = 'on';
+                set(calc, 'ButtonPushedFcn', @create_sphere);
                 fig.RowHeight{5} = 130;
                 A_label.Text = 'A (m)';
-                sphereGUI(fig)
-        
+                
             case 'Cylindrical'  
-            
+%                 fig.RowHeight{5} = 130;
+%                 A_label.Text = 'A (m)';
+%                 sphereGUI(fig, fields)
+                
             case 'Parallel Plate'
+                calc.Visible = 'on';
+                set(calc, 'ButtonPushedFcn', @create_capacitor);
                 fig.RowHeight{5} = 0;
                 A_label.Text = 'Distance (m)';
-                plateGUI(fig)
+                
             otherwise
                 
         end
     end
->>>>>>> Stashed changes
+
+    function bode_cap(cap)  %input capacitor object, returns bode plot
+        C = cap.capacitance;    %get capacitance
+        sys = tf([1], [C 0]);  %create transfer function (reactance)
+        p = uipanel(fig);
+        p.Layout.Row = [5 8];
+        p.Layout.Column = [5 8];
+        bodeplot(p, sys);      %get bode plot (frequency vs reactance)  
+    end
 end
 
