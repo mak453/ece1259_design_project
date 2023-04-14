@@ -41,7 +41,8 @@ classdef capacitor < handle
             elseif obj.capacitance > 0 && obj.area > 0 && obj.A_dist == 0
                 obj.A_dist = (obj.e0*obj.dielectric.er*obj.area)/obj.capacitance;
             else
-                % error
+                ME = MException('GUI:InvalidInputs','Too many missing inputs. Cannot solve.');
+                throw(ME)
             end
         end
     end

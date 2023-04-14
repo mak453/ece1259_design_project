@@ -133,4 +133,3 @@ function GUI(bank_names, bank)
         end
     end
 end
-

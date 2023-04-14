@@ -17,4 +17,8 @@ function sphereGUI(fig, data)
         end
         
     end
+<<<<<<< HEAD
 end
+=======
+end
+>>>>>>> main
