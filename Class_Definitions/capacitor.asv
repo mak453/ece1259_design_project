@@ -7,7 +7,7 @@ classdef capacitor < handle
     properties
         area
         capacitance
-        custom_tf
+        cu
         A_dist
         dielectric
         reactance

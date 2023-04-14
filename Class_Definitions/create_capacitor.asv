@@ -6,10 +6,12 @@ function create_capacitor(obj, eventData)
     area = data(3);
     dist = data(4);
     bode = data(6);
-        
+    panel = data(7);
+    
+    
     new_cap = capacitor(material.Value, cap.Value, area.Value, dist.Value);
     
-    bode.Visible = 'on';
+    panel.Visible = 'on';
     bode.UserData = new_cap;     
       
     if cap.Value == 0 && area.Value > 0 && dist.Value > 0

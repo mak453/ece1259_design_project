@@ -7,11 +7,11 @@ function bode_cap(obj, eventData)  %input capacitor object, returns bode plot
     panel.Layout.Row = [1 6];
     panel.Layout.Column = [4 8];
     
-    axes = uiaxes(panel, 'OuterPosition', [5 15 230 205]);
+    axes = uiaxes(panel, 'OuterPosition', [5 15 225 200]);
    
     %if (num.Value == '' || num.Value == 'Numerator') && (denom.Value == '' || denom.Value == 'Denomenator')
     sys = tf(1, [C 0]);  %create transfer function (reactance)
-    disp(sys)    
+        
         %get capacitance
         
     opts = bodeoptions;
