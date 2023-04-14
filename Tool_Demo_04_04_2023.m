@@ -12,17 +12,7 @@ function GUI(bank_names, bank)
     cap_shape = uibuttongroup(fig);
     cap_shape.Layout.Row = 1;
     cap_shape.Layout.Column = [1 3];
-        
-    num = uieditfield(fig,'Tag','transfer','Visible', 'off');
-    num.Value = 'Numerator';
-    num.Layout.Row = 7;
-    num.Layout.Column = [7 8];
-    
-    denom = uieditfield(fig,'Tag','transfer','Visible', 'off');
-    denom.Value = 'Denomenator';
-    denom.Layout.Row = 8;
-    denom.Layout.Column = [7 8];
-    
+           
     start = uiradiobutton(cap_shape, 'FontSize', 24,'Text', 'None', 'Visible', 'off');
     uiradiobutton(cap_shape, 'FontSize', 24,'Text', 'Parallel Plate', 'Value', 0,'Position', [10 25 200 100]);
     uiradiobutton(cap_shape, 'FontSize', 24,'Text', 'Spherical', 'Value', 0,'Position', [210 25 200 100]);
@@ -96,21 +86,79 @@ function GUI(bank_names, bank)
     shape_SelectionChangedFcn(cap_shape, default);
     set(cap_shape, 'SelectionChangedFcn', @shape_SelectionChangedFcn);
             
-    bode =  uibutton(fig, 'Text', 'Plot Bode', 'FontSize', 32, 'Visible', 'off'); 
-    set(bode, 'ButtonPushedFcn', @bode_cap);
-    bode.UserData = [num, denom];
-    bode.Layout.Row = 7;
-    bode.Layout.Column = [4 6];
-            
+    reactance_b =  uibutton(fig, 'Text', 'Plot Reactance', 'FontSize', 32, 'Visible', 'off'); 
+    set(reactance_b, 'ButtonPushedFcn', @reactance_bode);
+    reactance_b.Layout.Row = 7;
+    reactance_b.Layout.Column = [4 6];  
+    
+    num = uieditfield(fig,'Tag','num', 'Visible', 'off');
+    num.Value = 'Enter numerator';
+    num.Layout.Row = 6;
+    num.Layout.Column = [7 8];
+    num.FontSize = 24;
+    
+    denom = uieditfield(fig,'Tag','denom', 'Visible', 'off');
+    denom.Value = 'Enter denomenator';
+    denom.Layout.Row = 7;
+    denom.Layout.Column = [7 8];
+    denom.FontSize = 24;
+    
+    data = struct;
+    data.fig = fig;
+    
+    custom =  uibutton(fig, 'Text', 'Plot Transfer Function', 'FontSize', 24, 'Visible', 'off'); 
+    set(custom, 'ButtonPushedFcn', @bode_cap);
+    custom.Layout.Row = 6;
+    custom.Layout.Column = [4 6];    
+    custom.UserData = data;
+    
     calc =  uibutton(fig, 'Text', 'Calculate', 'FontSize', 32, 'Visible', 'off'); 
-    calc.UserData = [dd, cap, area, A_field, B_field, bode, num, denom];
+    calc.UserData = [dd, cap, area, A_field, B_field, custom, reactance_b, num, denom];
     calc.Layout.Row = 7;
     calc.Layout.Column = [1 3]; 
+    
+    function bode_cap(obj, button)
+        num.Editable = 'on';
+        denom.Editable = 'on';
+        num.Visible = 'on';
+        denom.Visible = 'on';
+        
+        set(num, 'ValueChangedFcn', @setNum);
+        set(denom, 'ValueChangedFcn', @setDenom);        
+                       
+        data.num = num.Value;
+        data.denom = denom.Value;
+        bode_tf(data)
+        
+        function setNum(obj, eventData)
+            data.num = obj.Value;
+        end
+        
+        function setDenom(obj, eventData)
+            data.denom = obj.Value;
+        end             
+    end
+    function reactance_bode(obj, button)
+        num.Value = "1";
+        denom.Value = "s";
+        num.Editable = 'off';
+        denom.Editable = 'off';
+        num.Visible = 'on';
+        denom.Visible = 'on';
+        data.num = num.Value;
+        data.denom = denom.Value;
+        bode_tf(data)
+        num.Editable = 'on';
+        denom.Editable = 'on';
+    end
     
     function shape_SelectionChangedFcn(hObject, button) 
         switch get(button.NewValue, 'Text')
             case 'Spherical'
-                bode.Visible = 'off';
+                num.Visible = 'off';
+                denom.Visible = 'off';
+                custom.Visible = 'off';
+                reactance_b.Visible = 'off';
                 calc.Visible = 'on';
                 set(calc, 'ButtonPushedFcn', @create_sphere);
                 fig.RowHeight{5} = 130;
@@ -122,7 +170,10 @@ function GUI(bank_names, bank)
 %                 sphereGUI(fig, fields)
                 
             case 'Parallel Plate'
-                bode.Visible = 'off';
+                num.Visible = 'off';
+                denom.Visible = 'off';
+                custom.Visible = 'off';
+                reactance_b.Visible = 'off';
                 calc.Visible = 'on';
                 set(calc, 'ButtonPushedFcn', @create_capacitor);
                 fig.RowHeight{5} = 0;
