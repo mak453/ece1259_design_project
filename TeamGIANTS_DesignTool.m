@@ -2,10 +2,11 @@ all_fig = findall(0, 'type', 'figure');
 close(all_fig); clear; clc;
 addpath('Class_Definitions')
 [bank_names, bank] = material_bank;
+freq = 0:1:10e6;
 
-GUI(bank_names, bank)
+GUI(bank_names, bank, freq)
 
-function GUI(bank_names, bank)
+function GUI(bank_names, bank, freq)
     figGUI = uifigure('Name','Capacitor Design Tool','NumberTitle','off','WindowState', 'maximized');
     fig = uigridlayout(figGUI, [7,8]);
     
@@ -85,83 +86,59 @@ function GUI(bank_names, bank)
     
     shape_SelectionChangedFcn(cap_shape, default);
     set(cap_shape, 'SelectionChangedFcn', @shape_SelectionChangedFcn);
-            
-    reactance_b =  uibutton(fig, 'Text', 'Plot Reactance', 'FontSize', 32, 'Visible', 'off'); 
-    set(reactance_b, 'ButtonPushedFcn', @reactance_bode);
-    reactance_b.Layout.Row = 7;
-    reactance_b.Layout.Column = [4 6];  
-    
-    num = uieditfield(fig,'Tag','num', 'Visible', 'off');
-    num.Value = 'Enter numerator';
-    num.Layout.Row = 6;
-    num.Layout.Column = [7 8];
-    num.FontSize = 24;
-    
-    denom = uieditfield(fig,'Tag','denom', 'Visible', 'off');
-    denom.Value = 'Enter denomenator';
-    denom.Layout.Row = 7;
-    denom.Layout.Column = [7 8];
-    denom.FontSize = 24;
-    
+               
     data = struct;
+    data.fig = fig;
     
-    custom =  uibutton(fig, 'Text', 'Plot Transfer Function', 'FontSize', 24, 'Visible', 'off'); 
+    custom =  uibutton(fig, 'Text', 'Plot Bode', 'FontSize', 24, 'Visible', 'off'); 
     set(custom, 'ButtonPushedFcn', @bode_cap);
-    custom.Layout.Row = 6;
-    custom.Layout.Column = [4 6];    
+    custom.Layout.Row = 7;
+    custom.Layout.Column = [4 8];    
     custom.UserData = data;
     
     calc =  uibutton(fig, 'Text', 'Calculate', 'FontSize', 32, 'Visible', 'off'); 
-    calc.UserData = [dd, cap, area, A_field, B_field, custom, reactance_b, num, denom];
+    calc.UserData = [dd, cap, area, A_field, B_field, custom];
     calc.Layout.Row = 7;
     calc.Layout.Column = [1 3]; 
     
-    function bode_cap(obj, button)
-        num.Editable = 'on';
-        denom.Editable = 'on';
-        num.Visible = 'on';
-        denom.Visible = 'on';
+    function bode_cap(hObject, button)
+        capacitance = hObject.UserData.cap.capacitance;
         
-        set(num, 'ValueChangedFcn', @setNum);
-        set(denom, 'ValueChangedFcn', @setDenom);        
-                       
-        data.fig = fig;
-        data.num = num.Value;
-        data.denom = denom.Value;
+        H = 1j*2*pi*freq*capacitance;
+        magnitude = mag2db(abs(H));
+        phase = toDegrees('radians', angle(H));
         
-        function setNum(obj, eventData)
-            data.num = obj.Value;
-        end
-        
-        function setDenom(obj, eventData)
-            data.denom = obj.Value;
-        end
-        
+        mag_p = uipanel(fig);
+        mag_p.Layout.Row = [1 3];
+        mag_p.Layout.Column = [4 8];
+        mag_axes = uiaxes(mag_p, 'OuterPosition', [5 5 955 475]);
+
+        ang_p = uipanel(fig);
+        ang_p.Layout.Row = [4 6];
+        ang_p.Layout.Column = [4 8];
+        ang_axes = uiaxes(ang_p, 'OuterPosition', [5 5 955 300]);
+
+        semilogx(mag_axes, freq, magnitude, 'LineWidth', 2);
+        xlabel(mag_axes, 'Frequency (Hz)');
+        ylabel(mag_axes, 'Gain (dB)');
+        title(mag_axes, 'Magnitude');
+        grid(mag_axes, 'on')
+
+        semilogx(ang_axes, freq, phase, 'LineWidth', 2);
+        xlabel(ang_axes, 'Frequency (Hz)');
+        ylabel(ang_axes, 'Angle (Degrees)');
+        title(ang_axes, 'Phase');
+        ang_axes.YLim = [-180 180];
+        ang_axes.YTick = [-180, -135, -90, -45, 0, 45, 90, 135, 180];
+        ang_axes.YTickLabel = {'-\pi', '-3\pi/4', '-\pi/2', '-\pi/4', '0', '\pi/4', '\pi/2', '3\pi/4', '\pi'};
+        grid(ang_axes, 'on')
         
         
     end
-    function reactance_bode(obj, button)
-        num.Value = "1";
-        denom.Value = "s";
-        num.Editable = 'off';
-        denom.Editable = 'off';
-        num.Visible = 'on';
-        denom.Visible = 'on';
-        data.fig = fig;
-        data.num = num.Value;
-        data.denom = denom.Value;
-        bode_tf(data)
-        num.Editable = 'on';
-        denom.Editable = 'on';
-    end
-    
     function shape_SelectionChangedFcn(hObject, button) 
         switch get(button.NewValue, 'Text')
             case 'Spherical'
-                num.Visible = 'off';
-                denom.Visible = 'off';
                 custom.Visible = 'off';
-                reactance_b.Visible = 'off';
                 calc.Visible = 'on';
                 set(calc, 'ButtonPushedFcn', @create_sphere);
                 fig.RowHeight{5} = 130;
@@ -173,10 +150,7 @@ function GUI(bank_names, bank)
 %                 sphereGUI(fig, fields)
                 
             case 'Parallel Plate'
-                num.Visible = 'off';
-                denom.Visible = 'off';
                 custom.Visible = 'off';
-                reactance_b.Visible = 'off';
                 calc.Visible = 'on';
                 set(calc, 'ButtonPushedFcn', @create_capacitor);
                 fig.RowHeight{5} = 0;

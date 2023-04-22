@@ -6,24 +6,13 @@ function create_capacitor(obj, eventData)
     area = data(3);
     dist = data(4);
     bode_b = data(6);
-    reactance_b = data(7);
-    num = data(8);
-    denom = data(9);
-        
     new_cap = capacitor(material.Value, cap.Value, area.Value, dist.Value);
     
     userData = struct;
     userData.bode = bode_b;
     userData.cap = new_cap;
-    userData.num = num.Value;
-    userData.denom = denom.Value;
     
-    set(num, 'ValueChangedFcn', '');
-    set(denom, 'ValueChangedFcn', ''); 
-    num.Visible = 'on';
-    denom.Visible = 'on';
     bode_b.Visible = 'on';
-    reactance_b.Visible = 'on';
     bode_b.UserData = userData;     
       
     if cap.Value == 0 && area.Value > 0 && dist.Value > 0
@@ -32,6 +21,6 @@ function create_capacitor(obj, eventData)
         area.Value = new_cap.area; 
     elseif cap.Value > 0 && area.Value > 0 && dist.Value == 0
         dist.Value = new_cap.A_dist;
-    end     
-    
+    end   
+        
 end
