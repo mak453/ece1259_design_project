@@ -102,7 +102,7 @@ function GUI(bank_names, bank, freq)
     calc.Layout.Column = [1 3]; 
     
     function bode_cap(hObject, button)
-        capacitance = hObject.UserData.cap.capacitance;
+        capacitance = hObject.UserData.capacitance;
         
         H = 1j*2*pi*freq*capacitance;
         magnitude = mag2db(abs(H));
