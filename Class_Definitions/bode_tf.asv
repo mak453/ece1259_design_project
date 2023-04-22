@@ -1,7 +1,7 @@
-function b = bode_tf(data)   % input numerator and denomenator as strings, returns bode plot
+function b = bode_tf(num_val, den_val)   % input numerator and denomenator as strings, returns bode plot
     % convert string to symbolic expression
-    num = str2sym(string(data.num));
-    den = str2sym(string(data.denom));
+    num = str2sym(string(num_val));
+    den = str2sym(string(den_val));
     
     % check for inappropriate variables
 %     if ~isequal(symvar(num), symvar(den))
@@ -21,9 +21,9 @@ function b = bode_tf(data)   % input numerator and denomenator as strings, retur
     sys = tf(sym2poly(num), sym2poly(den));
    
     %create bode plot
-    panel = uipanel(data.fig);
-    panel.Layout.Row = [1 5];
-    panel.Layout.Column = [4 8];
+    panel = uipanel(obj.Parent);
+%     panel.Layout.Row = [1 6];
+%     panel.Layout.Column = [4 8];
     axes = uiaxes(panel, 'OuterPosition', [5 15 230 205]);
     opts = bodeoptions;
     opts.Title.String = '';
