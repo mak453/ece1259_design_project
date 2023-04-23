@@ -6,18 +6,17 @@ function create_capacitor(obj, eventData)
     area = data(3);
     dist = data(4);
     bode = data(6);
+    cond = data(7);
+    leak = data(8);
         
-    new_cap = capacitor(material.Value, cap.Value, area.Value, dist.Value);
+    new_cap = capacitor(material.Value, area.Value, dist.Value);
+    new_cap.solve(new_cap);
     
     bode.Visible = 'on';
     bode.UserData = new_cap;     
       
-    if cap.Value == 0 && area.Value > 0 && dist.Value > 0
-        cap.Value = new_cap.capacitance;      
-    elseif cap.Value > 0 && area.Value == 0 && dist.Value > 0
-        area.Value = new_cap.area; 
-    elseif cap.Value > 0 && area.Value > 0 && dist.Value == 0
-        dist.Value = new_cap.A_dist;
-    end   
+    cap.Value = new_cap.capacitance;      
+    cond.Value = new_cap.conductance;
+    leak.Value = new_cap.leakage_curr;
         
 end

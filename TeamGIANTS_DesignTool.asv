@@ -21,32 +21,32 @@ function GUI(bank_names, bank, freq)
     
     uilabel(cap_shape, 'Text', 'Capacitor Shape', 'Position', [185 25 200 100], 'FontSize', 24);
       
-    cap = uieditfield(fig,'numeric','Tag','capacitor', 'Editable', 'off', 'ValueDisplayFormat','%d Farads');
+    cap = uieditfield(fig,'numeric','Tag','capacitor', 'Editable', 'off');
     cap.Layout.Row = 10;
     cap.Layout.Column = [6 10];
     cap.FontSize = 24;
     cap_label = uilabel(fig);
-    cap_label.Text = 'Capacitance';
+    cap_label.Text = 'Capacitance (F)';
     cap_label.Layout.Row = 10;
     cap_label.Layout.Column = [1 5];
     cap_label.FontSize = 24;
 
-    cond = uieditfield(fig,'numeric','Tag','conductance', 'Editable', 'off', 'ValueDisplayFormat','%d Siemens');
+    cond = uieditfield(fig,'numeric','Tag','conductance', 'Editable', 'off');
     cond.Layout.Row = 11;
     cond.Layout.Column = [6 10];
     cond.FontSize = 24;
     cond_label = uilabel(fig);
-    cond_label.Text = 'Conductance [60Hz]';
+    cond_label.Text = 'Conductance ( )';
     cond_label.Layout.Row = 11;
     cond_label.Layout.Column = [1 5];
     cond_label.FontSize = 24;
     
-    leak = uieditfield(fig,'numeric','Tag','leakage', 'Editable', 'off', 'ValueDisplayFormat','%d Amps');
+    leak = uieditfield(fig,'numeric','Tag','leakage', 'Editable', 'off');
     leak.Layout.Row = 12;
     leak.Layout.Column = [6 10];
     leak.FontSize = 24;
     leak_label = uilabel(fig);
-    leak_label.Text = 'Current Leakage';
+    leak_label.Text = 'Current Leakage ( )';
     leak_label.Layout.Row = 12;
     leak_label.Layout.Column = [1 5];
     leak_label.FontSize = 24;
@@ -111,7 +111,7 @@ function GUI(bank_names, bank, freq)
     custom.UserData = data;
     
     calc =  uibutton(fig, 'Text', 'Calculate', 'FontSize', 32, 'Visible', 'off'); 
-    calc.UserData = [dd, cap, area, A_field, B_field, custom, cond, leak];
+    calc.UserData = [dd, cap, area, A_field, B_field, custom];
     calc.Layout.Row = [15 16];
     calc.Layout.Column = [2 4];
     
@@ -121,15 +121,15 @@ function GUI(bank_names, bank, freq)
     reset.Layout.Column = [7 9];    
     reset.UserData = data;
     
-    mag_p = uipanel(fig, 'Visible', 'off');
-    mag_p.Layout.Row = [1 10];
-    mag_p.Layout.Column = [11 30];
-    mag_axes = uiaxes(mag_p, 'OuterPosition', [5 5 925 450]);
+    mag_p = uipanel(fig);
+        mag_p.Layout.Row = [1 10];
+        mag_p.Layout.Column = [11 30];
+        mag_axes = uiaxes(mag_p, 'OuterPosition', [5 5 925 450]);
 
-    ang_p = uipanel(fig, 'Visible', 'off');
-    ang_p.Layout.Row = [11 20];
-    ang_p.Layout.Column = [11 30];
-    ang_axes = uiaxes(ang_p, 'OuterPosition', [5 5 925 450]);
+        ang_p = uipanel(fig);
+        ang_p.Layout.Row = [11 20];
+        ang_p.Layout.Column = [11 30];
+        ang_axes = uiaxes(ang_p, 'OuterPosition', [5 5 925 450]);
         
     function reset_gui(hOject, button)
        area.Value = 0;
@@ -140,18 +140,10 @@ function GUI(bank_names, bank, freq)
        B_label.Visible = 'off';
        B_field.Editable = 'off';
        B_field.Enable = 'off';
-       mag_p.Visible = 'off';
-       ang_p.Visible = 'off';
-       cap.Value = 0;
-       cond.Value = 0;
-       leak.Value = 0;
     end
     
     function bode_cap(hObject, button)
         capacitance = hObject.UserData.capacitance;
-        
-        mag_p.Visible = 'on';
-        ang_p.Visible = 'on';
         
         H = 1j*2*pi*freq*capacitance;
         magnitude = mag2db(abs(H));
@@ -185,13 +177,9 @@ function GUI(bank_names, bank, freq)
                 B_field.Enable = 'on';
                 
             case 'Cylindrical'  
-                custom.Visible = 'off';
-                calc.Visible = 'on';
-                set(calc, 'ButtonPushedFcn', @create_cylinder);
-                A_label.Text = 'A (m)';
-                B_label.Visible = 'on';
-                B_field.Editable = 'on';
-                B_field.Enable = 'on';
+%                 fig.RowHeight{5} = 130;
+%                 A_label.Text = 'A (m)';
+%                 sphereGUI(fig, fields)
                 
             case 'Parallel Plate'
                 custom.Visible = 'off';
