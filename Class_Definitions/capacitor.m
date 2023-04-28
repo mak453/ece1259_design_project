@@ -10,7 +10,6 @@ classdef capacitor < handle
         A_dist
         dielectric
         conductance
-        leakage_curr
     end
     
     methods
@@ -32,7 +31,6 @@ classdef capacitor < handle
             % Cap = (e0*er*A)/d  
             obj.capacitance = (obj.dielectric.er*obj.e0* obj.area)/obj.A_dist;             
             obj.conductance = 2*pi*60*obj.capacitance;
-            obj.leakage_curr = 0;
         end
     end
 end

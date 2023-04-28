@@ -8,7 +8,6 @@ function create_cylinder(obj, eventData)
     B_rad = data(5);
     bode = data(6);
     cond = data(7);
-    leak = data(8);
     
     new_cap = cylindrical(material.Value, area.Value, A_rad.Value, B_rad.Value);
     new_cap.solve(new_cap);
@@ -18,5 +17,4 @@ function create_cylinder(obj, eventData)
       
     cap.Value = new_cap.capacitance;      
     cond.Value = new_cap.conductance;
-    leak.Value = new_cap.leakage_curr;   
 end

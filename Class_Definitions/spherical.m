@@ -23,7 +23,6 @@ classdef spherical < capacitor
             % C=(4πϵ0*A*B)/(B−A)            
             obj.capacitance = (4*pi*obj.e0*obj.dielectric.er*obj.A_dist*obj.B_dist)/abs(obj.B_dist - obj.A_dist);
             obj.conductance = 2*pi*60*obj.capacitance;
-            obj.leakage_curr = 0;
         end
     end
 end

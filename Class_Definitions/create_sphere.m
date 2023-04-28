@@ -1,9 +1,6 @@
 function create_sphere(obj, eventData)
     data = get(obj, 'UserData');
-    
-    disp(eventData)
-    disp(obj)
-    
+        
     material = data(1);
     cap = data(2);
     area = data(3);
@@ -11,7 +8,6 @@ function create_sphere(obj, eventData)
     B_rad = data(5);
     bode = data(6);
     cond = data(7);
-    leak = data(8);
     
     new_cap = spherical(material.Value, area.Value, A_rad.Value, B_rad.Value);
     new_cap.solve(new_cap);
@@ -20,7 +16,6 @@ function create_sphere(obj, eventData)
     bode.UserData = new_cap;     
       
     cap.Value = new_cap.capacitance;      
-    cond.Value = new_cap.conductance;
-    leak.Value = new_cap.leakage_curr;     
+    cond.Value = new_cap.conductance;    
       
 end

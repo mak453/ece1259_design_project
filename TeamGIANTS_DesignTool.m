@@ -40,17 +40,7 @@ function GUI(bank_names, bank, freq)
     cond_label.Layout.Row = 11;
     cond_label.Layout.Column = [1 5];
     cond_label.FontSize = 24;
-    
-    leak = uieditfield(fig,'numeric','Tag','leakage', 'Editable', 'off', 'ValueDisplayFormat','%d Amps');
-    leak.Layout.Row = 12;
-    leak.Layout.Column = [6 10];
-    leak.FontSize = 24;
-    leak_label = uilabel(fig);
-    leak_label.Text = 'Current Leakage';
-    leak_label.Layout.Row = 12;
-    leak_label.Layout.Column = [1 5];
-    leak_label.FontSize = 24;
-    
+        
     area = uieditfield(fig,'numeric','Tag','area');
     area.Layout.Row = 4;
     area.Layout.Column = [6 10];
@@ -111,7 +101,7 @@ function GUI(bank_names, bank, freq)
     custom.UserData = data;
     
     calc =  uibutton(fig, 'Text', 'Calculate', 'FontSize', 32, 'Visible', 'off'); 
-    calc.UserData = [dd, cap, area, A_field, B_field, custom, cond, leak];
+    calc.UserData = [dd, cap, area, A_field, B_field, custom, cond];
     calc.Layout.Row = [15 16];
     calc.Layout.Column = [2 4];
     
@@ -144,7 +134,6 @@ function GUI(bank_names, bank, freq)
        ang_p.Visible = 'off';
        cap.Value = 0;
        cond.Value = 0;
-       leak.Value = 0;
     end
     
     function bode_cap(hObject, button)
@@ -165,7 +154,7 @@ function GUI(bank_names, bank, freq)
 
         semilogx(ang_axes, freq, phase, 'LineWidth', 2);
         xlabel(ang_axes, 'Frequency (Hz)');
-        ylabel(ang_axes, 'Angle (Degrees)');
+        ylabel(ang_axes, 'Angle (Radians)');
         title(ang_axes, 'Phase');
         ang_axes.YLim = [-180 180];
         ang_axes.YTick = [-180, -135, -90, -45, 0, 45, 90, 135, 180];

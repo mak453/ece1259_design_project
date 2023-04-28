@@ -7,7 +7,6 @@ function create_capacitor(obj, eventData)
     dist = data(4);
     bode = data(6);
     cond = data(7);
-    leak = data(8);
         
     new_cap = capacitor(material.Value, area.Value, dist.Value);
     new_cap.solve(new_cap);
@@ -17,6 +16,5 @@ function create_capacitor(obj, eventData)
       
     cap.Value = new_cap.capacitance;      
     cond.Value = new_cap.conductance;
-    leak.Value = new_cap.leakage_curr;
         
 end

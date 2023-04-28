@@ -23,7 +23,6 @@ classdef cylindrical < capacitor
             
             obj.capacitance = (2*pi*obj.e0*obj.dielectric.er)/abs(log(obj.B_dist) - log(obj.A_dist));
             obj.conductance = 2*pi*60*obj.capacitance;
-            obj.leakage_curr = 0;
         end
     end
 end
