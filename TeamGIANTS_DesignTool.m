@@ -142,7 +142,7 @@ function GUI(bank_names, bank, freq)
         mag_p.Visible = 'on';
         ang_p.Visible = 'on';
         
-        H = 1j*2*pi*freq*capacitance;
+        H = abs(1j*2*pi*freq*capacitance);
         magnitude = mag2db(abs(H));
         phase = toDegrees('radians', angle(H));
         
